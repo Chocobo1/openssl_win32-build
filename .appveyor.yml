@@ -1,0 +1,93 @@
+# Notes:
+# - Minimal appveyor.yml file is an empty file. All sections are optional.
+# - Indent each level of configuration with 2 spaces. Do not use tabs!
+# - All section names are case-sensitive.
+# - Section names should be unique on each level.
+
+#---------------------------------#
+#  general configuration          #
+#---------------------------------#
+
+# version format
+version: '{branch}-{build}'
+
+# Do not build on tags (GitHub only)
+skip_tags: true
+
+# manual mode
+branches:
+  except:
+    - /.*/
+
+
+#---------------------------------#
+#  environment configuration      #
+#---------------------------------#
+
+# environment variables
+# build system info: https://www.appveyor.com/docs/build-environment/#pre-installed-software
+os: Visual Studio 2017
+
+environment:
+  REPO_DIR: &REPO_DIR c:\project  # directory created by appveyor
+
+  NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win64/nasm-2.13.03-win64.zip
+
+  OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1.tar.gz
+
+
+# clone directory
+clone_folder: *REPO_DIR
+
+
+#---------------------------------#
+#  build configuration            #
+#---------------------------------#
+
+# scripts to run before build
+install:
+  # install NASM
+  - cd \
+  - appveyor DownloadFile "%NASM_URL%" -FileName "c:\nasm.zip"
+  - 7z x "nasm.zip" > nul
+  - move nasm-* NASM
+  - set PATH=%PATH%;c:\NASM;
+  - nasm -v
+
+before_build:
+  - cd "%REPO_DIR%"
+  - appveyor DownloadFile "%OPENSSL_URL%" -FileName "openssl.tar.gz"
+  - 7z x "openssl.tar.gz" > nul
+  - 7z x "openssl.tar" > nul
+  - move "openssl-*" "openssl"
+  - copy "build_openssl.bat" "openssl"
+
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+  - cd "%REPO_DIR%\openssl"
+  - build_openssl.bat
+
+# scripts to run before deployment
+after_build:
+  # prepare for artifacts packaging
+  - cd "%REPO_DIR%"
+  - 7z a -sfx7z.sfx -mx9 "openssl.exe" "C:\openssl_64\*"
+  - 'powershell -Command "& { $hash = (Get-FileHash -Algorithm SHA256 "openssl.exe").hash.ToString().toLower(); Write-Host $hash " *openssl.exe"; }" > "openssl.exe.sha256"'
+
+
+#---------------------------------#
+#  tests configuration            #
+#---------------------------------#
+
+test: off
+
+
+#---------------------------------#
+#  artifacts configuration        #
+#---------------------------------#
+
+artifacts:
+  - path: openssl.exe
+    name: exe
+  - path: openssl.exe.sha256
+    name: checksum
