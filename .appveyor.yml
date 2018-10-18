@@ -34,6 +34,7 @@ environment:
   NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win64/nasm-2.13.03-win64.zip
 
   OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1.tar.gz
+  OPENSSL_10_URL: https://www.openssl.org/source/openssl-1.0.2p.tar.gz
 
 
 # clone directory
@@ -56,16 +57,19 @@ install:
 
 before_build:
   - cd "%REPO_DIR%"
-  - appveyor DownloadFile "%OPENSSL_URL%" -FileName "openssl.tar.gz"
+  #- appveyor DownloadFile "%OPENSSL_URL%" -FileName "openssl.tar.gz"
+  - appveyor DownloadFile "%OPENSSL_10_URL%" -FileName "openssl.tar.gz"
   - 7z x "openssl.tar.gz" > nul
   - 7z x "openssl.tar" > nul
   - move "openssl-*" "openssl"
-  - copy "build_openssl.bat" "openssl"
+  #- copy "build_openssl.bat" "openssl"
+  - copy "build_openssl_1.0.bat" "openssl"
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
   - cd "%REPO_DIR%\openssl"
-  - build_openssl.bat
+  #- build_openssl.bat
+  - build_openssl_1.0.bat
 
 # scripts to run before deployment
 after_build:
