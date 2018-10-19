@@ -61,22 +61,30 @@ before_build:
   - appveyor DownloadFile "%OPENSSL_10_URL%" -FileName "openssl.tar.gz"
   - 7z x "openssl.tar.gz" > nul
   - 7z x "openssl.tar" > nul
-  - move "openssl-*" "openssl"
-  #- copy "build_openssl.bat" "openssl"
-  - copy "build_openssl_1.0.bat" "openssl"
+  - move "openssl-*" "openssl32"
+  - 7z x "openssl.tar" > nul
+  - move "openssl-*" "openssl64"
+  #- copy "build32.bat" "openssl-32"
+  #- copy "build64.bat" "openssl-64"
+  - copy "build32_1.0.bat" "openssl32"
+  - copy "build64_1.0.bat" "openssl64"
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - cd "%REPO_DIR%\openssl"
-  #- build_openssl.bat
-  - build_openssl_1.0.bat
+  - cd "%REPO_DIR%"
+  #- cd "%REPO_DIR%\openssl32" && openssl32\build32.bat
+  #- cd "%REPO_DIR%\openssl64" && openssl64\build64.bat
+  - cd "%REPO_DIR%\openssl32" && build32_1.0.bat
+  - cd "%REPO_DIR%\openssl64" && build64_1.0.bat
 
 # scripts to run before deployment
 after_build:
   # prepare for artifacts packaging
   - cd "%REPO_DIR%"
-  - 7z a -sfx7z.sfx -mx9 "openssl.exe" "C:\openssl_64\*"
-  - 'powershell -Command "& { $hash = (Get-FileHash -Algorithm SHA256 "openssl.exe").hash.ToString().toLower(); Write-Host $hash " *openssl.exe"; }" > "openssl.exe.sha256"'
+  - 7z a -sfx7z.sfx -mx9 "openssl_32.exe" "C:\openssl_32\*"
+  - 'powershell -Command "& { $hash = (Get-FileHash -Algorithm SHA256 "openssl_32.exe").hash.ToString().toLower(); Write-Host $hash " *openssl_32.exe"; }" > "openssl_32.exe.sha256"'
+  - 7z a -sfx7z.sfx -mx9 "openssl_64.exe" "C:\openssl_64\*"
+  - 'powershell -Command "& { $hash = (Get-FileHash -Algorithm SHA256 "openssl_64.exe").hash.ToString().toLower(); Write-Host $hash " *openssl_64.exe"; }" > "openssl_64.exe.sha256"'
 
 
 #---------------------------------#
@@ -91,7 +99,11 @@ test: off
 #---------------------------------#
 
 artifacts:
-  - path: openssl.exe
+  - path: openssl_32.exe
     name: exe
-  - path: openssl.exe.sha256
+  - path: openssl_32.exe.sha256
+    name: checksum
+  - path: openssl_64.exe
+    name: exe
+  - path: openssl_64.exe.sha256
     name: checksum

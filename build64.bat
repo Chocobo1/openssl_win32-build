@@ -1,10 +1,7 @@
 @echo off
 rem Place this file at the root of the src lib
 
-if not defined CL_EXIST (
-	call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
-	set CL_EXIST=1
-)
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
 
 set OPENSSL_X64_DIR=c:\openssl_64
 
