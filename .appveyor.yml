@@ -31,10 +31,10 @@ os: Visual Studio 2017
 environment:
   REPO_DIR: &REPO_DIR c:\project  # directory created by appveyor
 
-  NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/win64/nasm-2.13.03-win64.zip
+  NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip
 
-  OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1.tar.gz
-  OPENSSL_10_URL: https://www.openssl.org/source/openssl-1.0.2p.tar.gz
+  OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1b.tar.gz
+  OPENSSL_10_URL: https://www.openssl.org/source/openssl-1.0.2r.tar.gz
 
 
 # clone directory
