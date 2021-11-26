@@ -1,7 +1,7 @@
 @echo off
 rem Place this file at the root of the src lib
 
-call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64_x86
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64_x86
 
 set OPENSSL_X32_DIR=c:\openssl_32
 

@@ -25,16 +25,16 @@ branches:
 #---------------------------------#
 
 # environment variables
-# build system info: https://www.appveyor.com/docs/build-environment/#pre-installed-software
-#os: Visual Studio 2019
-os: Visual Studio 2017
+# build system info: https://www.appveyor.com/docs/windows-images-software/
+os: Visual Studio 2022
+#os: Visual Studio 2017
 
 environment:
   REPO_DIR: &REPO_DIR c:\project  # directory created by appveyor
 
-  NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/win64/nasm-2.14.02-win64.zip
+  NASM_URL: https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
 
-  OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+  OPENSSL_URL: https://www.openssl.org/source/openssl-1.1.1l.tar.gz
   OPENSSL_1_0_URL: https://www.openssl.org/source/openssl-1.0.2u.tar.gz
 
 
@@ -58,24 +58,24 @@ install:
 
 before_build:
   - cd "%REPO_DIR%"
-  #- appveyor DownloadFile "%OPENSSL_URL%" -FileName "openssl.tar.gz"
-  - appveyor DownloadFile "%OPENSSL_1_0_URL%" -FileName "openssl.tar.gz"
+  - appveyor DownloadFile "%OPENSSL_URL%" -FileName "openssl.tar.gz"
+  #- appveyor DownloadFile "%OPENSSL_1_0_URL%" -FileName "openssl.tar.gz"
   - 7z x -y "openssl.tar.gz" > nul
   - 7z x -y "openssl.tar" > nul
   - move "openssl-*" "openssl32"
   - 7z x -y "openssl.tar" > nul
   - move "openssl-*" "openssl64"
-  #- copy "build32.bat" "openssl32"
-  #- copy "build64.bat" "openssl64"
-  - copy "build32_1.0.bat" "openssl32"
-  - copy "build64_1.0.bat" "openssl64"
+  - copy "build32.bat" "openssl32"
+  - copy "build64.bat" "openssl64"
+  #- copy "build32_1.0.bat" "openssl32"
+  #- copy "build64_1.0.bat" "openssl64"
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  #- cd "%REPO_DIR%\openssl32" && build32.bat
-  #- cd "%REPO_DIR%\openssl64" && build64.bat
-  - cd "%REPO_DIR%\openssl32" && build32_1.0.bat
-  - cd "%REPO_DIR%\openssl64" && build64_1.0.bat
+  - cd "%REPO_DIR%\openssl32" && build32.bat
+  - cd "%REPO_DIR%\openssl64" && build64.bat
+  #- cd "%REPO_DIR%\openssl32" && build32_1.0.bat
+  #- cd "%REPO_DIR%\openssl64" && build64_1.0.bat
 
 # scripts to run before deployment
 after_build:
