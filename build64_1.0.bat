@@ -7,7 +7,7 @@ set OPENSSL_X64_DIR=c:\openssl_64
 
 perl Configure VC-WIN64A no-shared --prefix="%OPENSSL_X64_DIR%"
 call ms\do_win64a
-powershell -Command "& { (Get-Content 'makefile') | ForEach-Object { $_ -replace '/MT', '/MT /Zc:wchar_t-' } | ForEach-Object { $_ -replace '/debug', '/debug /dynamicbase /nxcompat /incremental:no' } |  Set-Content 'makefile' }"
+powershell -Command "& { (Get-Content 'ms\nt.mak') | ForEach-Object { $_ -replace '/MT', '/MT /Zc:wchar_t- /guard:cf' } | ForEach-Object { $_ -replace '/debug', '/debug /opt:icf /incremental:no /guard:cf' } |  Set-Content 'ms\nt.mak' }"
 
 nmake -f "ms\nt.mak" install
 

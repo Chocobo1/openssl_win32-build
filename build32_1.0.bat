@@ -7,7 +7,7 @@ set OPENSSL_X32_DIR=c:\openssl_32
 
 perl Configure VC-WIN32 no-shared --prefix="%OPENSSL_X32_DIR%"
 call ms\do_nasm
-powershell -Command "& { (Get-Content 'makefile') | ForEach-Object { $_ -replace '/MT', '/MT /Zc:wchar_t-' } | ForEach-Object { $_ -replace '/debug', '/debug /dynamicbase /nxcompat /incremental:no' } |  Set-Content 'makefile' }"
+powershell -Command "& { (Get-Content 'ms\nt.mak') | ForEach-Object { $_ -replace '/MT', '/MT /Zc:wchar_t- /guard:cf' } | ForEach-Object { $_ -replace '/debug', '/debug /opt:icf /incremental:no /guard:cf' } |  Set-Content 'ms\nt.mak' }"
 
 nmake -f "ms\nt.mak" install
 

@@ -8,7 +8,7 @@ set OPENSSL_X64_DIR=c:\openssl_64
 mkdir _build && cd _build
 
 C:\Strawberry\perl\bin\perl ..\Configure VC-WIN64A no-shared --prefix="%OPENSSL_X64_DIR%" --openssldir="%OPENSSL_X64_DIR%\ssl"
-powershell -Command "& { (Get-Content 'makefile') | ForEach-Object { $_ -replace '/debug', '/debug /opt:ref /opt:icf /incremental:no' } |  Set-Content 'makefile' }"
+powershell -Command "& { (Get-Content 'makefile') | ForEach-Object { $_ -replace '/O2', '/O2 /guard:cf' } | ForEach-Object { $_ -replace '/debug', '/debug /opt:ref /opt:icf /incremental:no /guard:cf' } |  Set-Content 'makefile' }"
 
 nmake install
 
